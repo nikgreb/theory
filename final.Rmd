@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE)
 library(ggplot2)
 library(mosaic)
 library(tidyr)
+library(tidyverse)
 ```
 
 Average number of bison sightings in Yellowstone national park, per year 
