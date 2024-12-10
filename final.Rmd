@@ -1,0 +1,82 @@
+---
+title: "Final Project"
+author: "Jacob"
+date: "2024-11-21"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(mosaic)
+library(tidyr)
+```
+
+Average number of bison sightings in Yellowstone national park, per year 
+
+clean the data,
+
+```{r}
+ animals <- read.csv("wildlife.csv")
+```
+
+
+```{r}
+buffalo <- animals%>%
+  filter(Sighting.Animal=="Bison")
+```
+
+```{r}
+convert_to_numbers <- function(column) {
+  # Apply the transformation for each row in the column
+  sapply(column, function(value) {
+    # Handle "Less than X"
+    if (grepl("Less than", value)) {
+      number <- as.numeric(gsub("Less than ", "", value))
+      return(number / 2)  # Estimate: return half of the number as a representative value
+      
+    # Handle "More than X"
+    } else if (grepl("More than", value)) {
+      number <- as.numeric(gsub("More than ", "", value))
+      return(number + (number / 2))  # Estimate: return 1.5 times the number as a representative value
+
+    # Handle "Y to Z"
+    } else if (grepl("to", value)) {
+      range_values <- as.numeric(strsplit(value, " to ")[[1]])
+      return(mean(range_values))  # Take the average of the range
+
+    # Return NA if the value is unrecognized
+    } else {
+      return(NA)
+    }
+  })
+}
+
+buffalo$Sighting.Quantity <- convert_to_numbers(buffalo$Sighting.Quantity)
+```
+```{r}
+no_na <- drop_na(buffalo)
+```
+
+```{r}
+
+ggplot(buffalo, aes(x=Sighting.Quantity, ))+
+  geom_histogram()
+
+
+
+```
+```{r}
+bison <- no_na%>%
+  group_by(Observation.Year)%>%
+  summarize(tot = sum(Sighting.Quantity))
+  
+```
+
+
+
+
+
+
+
+
