@@ -69,8 +69,17 @@ ggplot(buffalo, aes(x=Sighting.Quantity, ))+
 ```{r}
 bison <- no_na%>%
   group_by(Observation.Year)%>%
-  summarize(tot = sum(Sighting.Quantity))
-  
+  summarize(tot = sum(Sighting.Quantity),rows = n())
+
+bison$average = bison$tot / bison$rows
+
+```
+
+
+
+```{r}
+ggplot(bison, aes(x=average))+
+  geom_histogram()
 ```
 
 
