@@ -84,6 +84,67 @@ ggplot(bison, aes(x=average))+
 ```
 
 
+# chunks from Nik's Rmd File
+```{r}
+library(infer)
+set.seed(356)
+# Generate bootstrap distribution of means
+bootobject_mean <- bison %>%
+  # Specify the variable of interest
+  specify(response = tot) %>%  
+  # Generate 1000 bootstrap samples
+  generate(reps = 1000, type = "bootstrap") %>% 
+  # Calculate the mean of each bootstrap sample
+ calculate(stat = "mean")*2
+head(bootobject_mean)
+```
+
+```{r, echo = F}
+histogram(~stat,
+          xlab="sample mean",
+          main="Bootstrap Distribution of sample mean",
+          cex.main=0.6,data = bootobject_mean)
+
+ggplot(bootobject_mean, aes(x = stat)) + geom_histogram(fill = 'darkorange', color = 'black', binwidth = 275) + labs(x = "Sample Mean", y ="Density", title = "Bootstrap Distribution of Twice the Sample Means") + theme_classic() + geom_vline(aes(xintercept = 1000), linetype = 1, color = 'red', linewidth = 1) + geom_vline(aes(xintercept = 1448.29), linetype = 2, linewidth = 1)
+```
+
+
+```{r,}
+favstats(~stat, data = bootobject_mean)[c("mean","sd")]
+
+```
+
+
+```{r}
+set.seed(356)
+# Generate bootstrap distribution of medians
+bootobject_median <- bison %>%
+  # Specify the variable of interest
+  specify(response = tot) %>%  
+  # Generate 1000 bootstrap samples
+  generate(reps = 1000, type = "bootstrap") %>% 
+  # Calculate the median of each bootstrap sample
+ calculate(stat = "median")*2
+head(bootobject_median)
+```
+
+
+
+```{r}
+histogram(~stat,
+          xlab="sample median",
+          main="Bootstrap Distribution of 2 sample median",
+          cex.main=0.6,data = bootobject_median)
+
+ggplot(bootobject_median, aes(x = stat)) + geom_histogram(fill = 'lightgreen', color = 'black', binwidth = 270) + labs(x = "Sample Median", y ="Density", title = "Boostrap Distribution of Twice the Sample Medians") + theme_classic() + geom_vline(aes(xintercept = 1000), linetype = 1, color = 'red', linewidth = 1) + geom_vline(aes(xintercept = 893), linetype = 2, linewidth = 1)
+```
+
+```{r,}
+favstats(~stat, data = bootobject_median)[c("mean","sd")]
+```
+
+
+## Initial Distribution
 
 
 
